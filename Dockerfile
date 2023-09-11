@@ -8,7 +8,7 @@ RUN apt update                     \
     --no-install-recommends        \
     afl++                          \
     ccache                         \
-    distcc                         \
+    distcc-pump                    \
     clang                          \
     clang-13                       \
     clang-14                       \
@@ -28,8 +28,6 @@ RUN apt update                     \
     llvm-15                        \
 &&  update-ccache-symlinks         \
 &&  update-distcc-symlinks         \
-&&  apt install      -y            \
-    --no-install-recommends        \
 &&  apt autoremove   -y            \
     --purge                        \
 &&  apt clean        -y            \
