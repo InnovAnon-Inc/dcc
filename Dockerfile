@@ -1,62 +1,18 @@
-FROM kalilinux/kali-rolling as build
+FROM voidlinux/voidlinux-musl as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update                     \
-&&  apt full-upgrade -y            \
-    --no-install-recommends        \
-&&  apt install      -y            \
-    --no-install-recommends        \
-    afl++                          \
-    ccache                         \
-    clang                          \
-    clang-13                       \
-    clang-14                       \
-    clang-15                       \
-    clang-16                       \
-    distcc-pump                    \
-    gcc                            \
-    gcc-11                         \
-    gcc-12                         \
-    gcc-13                         \
-    gcc-multilib                   \
-    gcc-11-multilib                \
-    gcc-12-multilib                \
-    gcc-13-multilib                \
-    g++                            \
-    g++-11                         \
-    g++-12                         \
-    g++-13                         \
-    libc-dev                       \
-    llvm-13                        \
-    llvm-14                        \
-    llvm-15                        \
-&&  update-ccache-symlinks         \
-&&  update-distcc-symlinks         \
-&&  apt autoremove   -y            \
-    --purge                        \
-&&  apt clean        -y            \
-&&  rm -rf /var/lib/apt/lists/*
+RUN echo repository=https://repo-fastly.voidlinux.org/current/musl/nonfree > /etc/xbps.d/10-repository-nonfree.conf
+RUN xbps-install -Sy \
+    xbps             \
+&&  xbps-install -Sy \
+    ccache           \
+    clang            \
+    distcc           \
+    distcc-pump      \
+    gcc
 
-RUN for k in                         \
-    afl-c++                          \
-    afl-cc                           \
-    afl-clang                        \
-    afl-clang++                      \
-    afl-clang-fast                   \
-    afl-clang-fast++                 \
-    afl-clang-lto                    \
-    afl-clang-lto++                  \
-    afl-g++                          \
-    afl-gcc                          \
-    afl-gcc-fast                     \
-    afl-g++-fast                   ; \
-do  ln -sv                           \
-        ../../bin/ccache             \
-         /usr/lib/ccache/$k          \
-||  exit 2                         ; \
-    done                             \
-&&  find /usr/lib/ccache             \
+RUN find /usr/lib/ccache             \
     -mindepth 1                      \
  \! -type d                          \
 |   tee -a /etc/distcc/commands.allow \
@@ -66,14 +22,17 @@ RUN ln -fsv                          \
     /etc/ccache.conf.d/ccache.conf   \
     /etc/ccache.conf
 
-RUN adduser --system distcc-user
+RUN useradd --system distcc-user
 
 ENV DISTCC_CMDLIST=/etc/distcc/commands.allow
+#ENV DISTCC_CMDLIST_NUMWORDS=2
 ENV DISTCC_CMDLIST_NUMWORDS=1
+# TODO remove this ?
 ENV PATH=/usr/lib/ccache:$PATH
+ENV PATH=/usr/lib/ccache/bin:$PATH
 
 ENTRYPOINT [                       \
-  "/usr/bin/distccd",              \
+  "/usr/sbin/distccd",             \
   "--daemon",                      \
   "--log-stderr",                  \
   "--no-detach",                   \
@@ -98,6 +57,6 @@ EXPOSE 3632/tcp \
 #HEALTHCHECK --interval=5m          \
 #            --timeout=3s           \
 #CMD         curl -f                \
-#            http://0.0.0.0:3633/   \
+#            http://0.0.0.0:3639/   \
 #||          exit 1
 

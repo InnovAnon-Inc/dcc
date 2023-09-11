@@ -1,13 +1,13 @@
 version: '3.8'
 services:
-  dcc-kali:
-    container_name:  innovanon/dcc-kali
+  dcc-voidlinux:
+    container_name:  innovanon/dcc-voidlinux
     ports:
-      - "0.0.0.0:3632:3632"
-      - "0.0.0.0:3633:3633"
+      - "0.0.0.0:3638:3632"
+      - "0.0.0.0:3639:3633"
     volumes:
-      - dcc-kali:/var/cache/ccache:rw
-      - ccache-redis:/etc/ccache.conf.d/:ro
+      - dcc-voidlinux:/var/cache/ccache:rw
+      - ccache-etc:/etc/ccache.conf.d/:ro
       - syslog-client:/etc/rsyslog.d:ro
     restart:         always
     #network_mode:    service:vpn-s1
@@ -25,5 +25,5 @@ services:
       #  condition:   service_healthy
 
 volumes:
-  dcc-kali:
+  dcc-voidlinux:
 
