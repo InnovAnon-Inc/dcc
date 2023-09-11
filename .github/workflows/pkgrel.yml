@@ -12,7 +12,6 @@ on:
     branches: [ "ubuntu" ]
   workflow_dispatch:
 
-
 jobs:
   build:
     name: build package
@@ -22,7 +21,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "repo"
-        #branch: "ubuntu"
 
     # TODO new image
     - name: Authenticate with Docker Hub
