@@ -1,7 +1,8 @@
 version: '3.8'
 services:
   dcc-voidlinux:
-    container_name:  innovanon/dcc-voidlinux
+    image: innovanon/dcc-voidlinux
+    container_name:  dcc-voidlinux
     ports:
       - "0.0.0.0:3638:3632"
       - "0.0.0.0:3639:3633"
