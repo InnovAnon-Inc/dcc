@@ -1,4 +1,4 @@
-name: PostGreSQL-Enabled RSysLog
+name: Dockerized DistCC with Server-Side CCache (Ubuntu)
 permissions:
   contents: write
 
