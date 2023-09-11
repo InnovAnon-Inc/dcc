@@ -7,9 +7,9 @@ on:
     - cron: '* * 1 * *'
   #[workflow_call]
   push:
-    branches: [ "ubuntu" ]
+    branches: [ "kali" ]
   pull_request:
-    branches: [ "ubuntu" ]
+    branches: [ "kali" ]
   workflow_dispatch:
 
 jobs:
@@ -39,18 +39,18 @@ jobs:
     - name: Build Docker Image
       working-directory: "repo"
       run: |
-        docker build -t "innovanon/dcc-ubuntu:$TEAMHACK_VERSION" .
+        docker build -t "innovanon/dcc-kali:$TEAMHACK_VERSION" .
       env:
         TEAMHACK_VERSION: ${{ steps.tag_version.outputs.new_tag }}
 
     - name: Tag Docker Image
       run: |
-        docker tag      "innovanon/dcc-ubuntu:$TEAMHACK_VERSION" \
-                         innovanon/dcc-ubuntu:latest
+        docker tag      "innovanon/dcc-kali:$TEAMHACK_VERSION" \
+                         innovanon/dcc-kali:latest
       env:
         TEAMHACK_VERSION: ${{ steps.tag_version.outputs.new_tag }}
 
     - name: Deploy Docker Image
       run: |
-        docker push      innovanon/dcc-ubuntu
+        docker push      innovanon/dcc-kali
 

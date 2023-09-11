@@ -1,35 +1,38 @@
-FROM ubuntu as build
+FROM kalilinux/kali-rolling as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update                     \
 &&  apt full-upgrade -y            \
+    --no-install-recommends        \
 &&  apt install      -y            \
     --no-install-recommends        \
     afl++                          \
     ccache                         \
-    distcc                         \
     clang                          \
     clang-13                       \
     clang-14                       \
     clang-15                       \
+    clang-16                       \
+    distcc-pump                    \
     gcc                            \
     gcc-11                         \
     gcc-12                         \
+    gcc-13                         \
     gcc-multilib                   \
     gcc-11-multilib                \
     gcc-12-multilib                \
+    gcc-13-multilib                \
     g++                            \
     g++-11                         \
     g++-12                         \
+    g++-13                         \
     libc-dev                       \
     llvm-13                        \
     llvm-14                        \
     llvm-15                        \
 &&  update-ccache-symlinks         \
 &&  update-distcc-symlinks         \
-&&  apt install      -y            \
-    --no-install-recommends        \
 &&  apt autoremove   -y            \
     --purge                        \
 &&  apt clean        -y            \
@@ -65,9 +68,9 @@ RUN ln -fsv                          \
 
 RUN adduser --system distcc-user
 
-ENV DISTCC_CMDLIST /etc/distcc/commands.allow
+ENV DISTCC_CMDLIST=/etc/distcc/commands.allow
 ENV DISTCC_CMDLIST_NUMWORDS=1
-ENV PATH          "/usr/lib/ccache:$PATH"
+ENV PATH=/usr/lib/ccache:$PATH
 
 ENTRYPOINT [                       \
   "/usr/bin/distccd",              \
@@ -87,7 +90,6 @@ CMD [                              \
   "--stats-port", "3633"           \
 ]
 
-VOLUME ["/etc/ccache.conf.d"]
 VOLUME ["/var/cache/ccache"]
 
 EXPOSE 3632/tcp \
@@ -96,6 +98,6 @@ EXPOSE 3632/tcp \
 #HEALTHCHECK --interval=5m          \
 #            --timeout=3s           \
 #CMD         curl -f                \
-#            http://0.0.0.0:3637/   \
+#            http://0.0.0.0:3633/   \
 #||          exit 1
 

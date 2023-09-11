@@ -1,12 +1,12 @@
 version: '3.8'
 services:
-  dcc-ubuntu:
-    container_name:  innovanon/dcc-ubuntu
+  dcc-kali:
+    container_name:  innovanon/dcc-kali
     ports:
-      - "0.0.0.0:3636:3632"
-      - "0.0.0.0:3637:3633"
+      - "0.0.0.0:3632:3632"
+      - "0.0.0.0:3633:3633"
     volumes:
-      - dcc-ubuntu:/var/cache/ccache:rw
+      - dcc-kali:/var/cache/ccache:rw
       - ccache-redis:/etc/ccache.conf.d/:ro
       - syslog-client:/etc/rsyslog.d:ro
     restart:         always
@@ -25,5 +25,5 @@ services:
       #  condition:   service_healthy
 
 volumes:
-  dcc-ubuntu:
+  dcc-kali:
 
