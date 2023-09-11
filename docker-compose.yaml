@@ -1,7 +1,8 @@
 version: '3.8'
 services:
   dcc-ubuntu:
-    container_name:  innovanon/dcc-ubuntu
+    image: innovanon/dcc-ubuntu
+    container_name:  dcc-ubuntu
     ports:
       - "0.0.0.0:3636:3632"
       - "0.0.0.0:3637:3633"
