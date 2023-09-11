@@ -4,37 +4,98 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update                     \
 &&  apt full-upgrade -y            \
-    --no-install-recommends        \
 &&  apt install      -y            \
     --no-install-recommends        \
-    rsyslog-pgsql                  \
+    afl++                          \
+    ccache                         \
+    distcc                         \
+    clang                          \
+    clang-13                       \
+    clang-14                       \
+    clang-15                       \
+    gcc                            \
+    gcc-11                         \
+    gcc-12                         \
+    gcc-multilib                   \
+    gcc-11-multilib                \
+    gcc-12-multilib                \
+    g++                            \
+    g++-11                         \
+    g++-12                         \
+    libc-dev                       \
+    llvm-13                        \
+    llvm-14                        \
+    llvm-15                        \
+&&  update-ccache-symlinks         \
+&&  update-distcc-symlinks         \
+&&  apt install      -y            \
+    --no-install-recommends        \
 &&  apt autoremove   -y            \
     --purge                        \
 &&  apt clean        -y            \
 &&  rm -rf /var/lib/apt/lists/*
 
-RUN sed -i                          \
-    's@^module(load="imklog".*@#&@' \
-    /etc/rsyslog.conf
+RUN for k in                         \
+    afl-c++                          \
+    afl-cc                           \
+    afl-clang                        \
+    afl-clang++                      \
+    afl-clang-fast                   \
+    afl-clang-fast++                 \
+    afl-clang-lto                    \
+    afl-clang-lto++                  \
+    afl-g++                          \
+    afl-gcc                          \
+    afl-gcc-fast                     \
+    afl-g++-fast                   ; \
+do  ln -sv                           \
+        ../../bin/ccache             \
+         /usr/lib/ccache/$k          \
+||  exit 2                         ; \
+    done                             \
+&&  find /usr/lib/ccache             \
+    -mindepth 1                      \
+ \! -type d                          \
+|   tee -a /etc/distcc/commands.allow \
+|   xargs ls -l
+
+RUN ln -fsv                          \
+    /etc/ccache.conf.d/ccache.conf   \
+    /etc/ccache.conf
+
+RUN adduser --system distcc-user
+
+ENV DISTCC_CMDLIST /etc/distcc/commands.allow
+ENV DISTCC_CMDLIST_NUMWORDS=1
+ENV PATH          "/usr/lib/ccache:$PATH"
 
 ENTRYPOINT [                       \
-  "/usr/sbin/rsyslogd",            \
-  "-n"                             \
+  "/usr/bin/distccd",              \
+  "--daemon",                      \
+  "--log-stderr",                  \
+  "--no-detach",                   \
+  "--user",       "distcc-user"    \
 ]
 
-#CMD [                              \
-#  "-d"                             \
-#]
+CMD [                              \
+  "--allow",      "0.0.0.0/0",     \
+  "--listen",     "0.0.0.0",       \
+  "--log-level=info",              \
+  "--nice",       "10",            \
+  "--port",       "3632",          \
+  "--stats",                       \
+  "--stats-port", "3633"           \
+]
 
-VOLUME ["/etc/rsyslog.d"]
-VOLUME ["/var/log"]
+VOLUME ["/etc/ccache.conf.d"]
+VOLUME ["/var/cache/ccache"]
 
-EXPOSE  514/udp \
-       6514/tcp
+EXPOSE 3632/tcp \
+       3633/tcp
 
 #HEALTHCHECK --interval=5m          \
 #            --timeout=3s           \
 #CMD         curl -f                \
-#            http://0.0.0.0:3633/   \
+#            http://0.0.0.0:3637/   \
 #||          exit 1
 

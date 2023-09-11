@@ -1,20 +1,29 @@
 version: '3.8'
 services:
-  syslog:
-    image:           innovanon/pgrsyslog
-    container_name:  syslog
+  dcc-ubuntu:
+    container_name:  innovanon/dcc-ubuntu
     ports:
-      - "0.0.0.0:514:514/udp"
-      - "0.0.0.0:6514:6514"
+      - "0.0.0.0:3636:3632"
+      - "0.0.0.0:3637:3633"
     volumes:
-      - syslog-etc:/etc/rsyslog.d:ro
-      - syslog-log:/var/log
+      - dcc-ubuntu:/var/cache/ccache:rw
+      - ccache-redis:/etc/ccache.conf.d/:ro
+      - syslog-client:/etc/rsyslog.d:ro
     restart:         always
+    #network_mode:    service:vpn-s1
+    healthcheck:
+    #  test: ["CMD-SHELL", "exec 3<> /dev/tcp/0.0.0.0/3633 ; cat <&3 ; exec 3<&-"]
+      test: ["CMD-SHELL", "distcc --show-hosts && ccache -s"]
+      interval:      1m
+      timeout:       3s
+      retries:       10
     depends_on:
-      db:
-        condition:   service_healthy
+      redis:
+         condition: service_started
+      syslog:
+         condition: service_started
+      #  condition:   service_healthy
 
 volumes:
-  syslog-etc:
-  syslog-log:
+  dcc-ubuntu:
 

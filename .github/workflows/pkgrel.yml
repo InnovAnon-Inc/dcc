@@ -7,9 +7,9 @@ on:
     - cron: '* * 1 * *'
   #[workflow_call]
   push:
-    branches: [ "main" ]
+    branches: [ "ubuntu" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "ubuntu" ]
   workflow_dispatch:
 
 
@@ -18,16 +18,11 @@ jobs:
     name: build package
     runs-on: ubuntu-latest
     steps:
-    #- name: install build deps
-    #  uses: awalsh128/cache-apt-pkgs-action@latest
-    #  with:
-    #    packages: >
-    #    version: 1.0
-    
     - name: Checkout code
       uses: actions/checkout@v3
       with:
         path: "repo"
+        #branch: "ubuntu"
 
     # TODO new image
     - name: Authenticate with Docker Hub
@@ -46,18 +41,18 @@ jobs:
     - name: Build Docker Image
       working-directory: "repo"
       run: |
-        docker build -t "innovanon/pgrsyslog:$TEAMHACK_VERSION" .
+        docker build -t "innovanon/dcc-ubuntu:$TEAMHACK_VERSION" .
       env:
         TEAMHACK_VERSION: ${{ steps.tag_version.outputs.new_tag }}
 
     - name: Tag Docker Image
       run: |
-        docker tag      "innovanon/pgrsyslog:$TEAMHACK_VERSION" \
-                         innovanon/pgrsyslog:latest
+        docker tag      "innovanon/dcc-ubuntu:$TEAMHACK_VERSION" \
+                         innovanon/dcc-ubuntu:latest
       env:
         TEAMHACK_VERSION: ${{ steps.tag_version.outputs.new_tag }}
 
     - name: Deploy Docker Image
       run: |
-        docker push      innovanon/pgrsyslog
+        docker push      innovanon/dcc-ubuntu
 
