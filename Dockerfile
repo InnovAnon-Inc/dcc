@@ -28,6 +28,7 @@ RUN apt update                     \
     g++-12                         \
     g++-13                         \
     libc-dev                       \
+    libisl-dev                     \
     llvm-13                        \
     llvm-14                        \
     llvm-15                        \
