@@ -10,7 +10,8 @@ RUN xbps-install -Sy \
     clang            \
     distcc           \
     distcc-pump      \
-    gcc
+    gcc              \
+    isl-devel
 
 RUN find /usr/lib/ccache             \
     -mindepth 1                      \
