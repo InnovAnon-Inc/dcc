@@ -69,29 +69,31 @@ RUN ln -fsv                          \
 
 #RUN adduser --system distcc-user
 
-ENV DISTCC_CMDLIST=/etc/distcc/commands.allow
+ENV DISTCC_CMDLIST /etc/distcc/commands.allow
 ENV DISTCC_CMDLIST_NUMWORDS=1
-ENV PATH=/usr/lib/ccache:$PATH
+ENV PATH          "/usr/lib/ccache:$PATH"
 
-ENTRYPOINT [                       \
-  "/usr/bin/distccd",              \
-  "--daemon",                      \
-  "--log-stderr",                  \
-  "--no-detach",                   \
-  "--user",       "distccd"        \
-]
+COPY ./entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+#ENTRYPOINT [                       \
+#  "/usr/bin/distccd",              \
+#  "--daemon",                      \
+#  "--log-stderr",                  \
+#  "--no-detach",                   \
+#  "--user",       "distccd"        \
+#]
+#
+#CMD [                              \
+#  "--allow",      "0.0.0.0/0",     \
+#  "--listen",     "0.0.0.0",       \
+#  "--log-level=debug",             \
+#  "--nice",       "10",            \
+#  "--port",       "3632",          \
+#  "--stats",                       \
+#  "--stats-port", "3633"           \
+#]
 
-CMD [                              \
-  "--allow",      "0.0.0.0/0",     \
-  "--listen",     "0.0.0.0",       \
-  "--log-level=debug",             \
-  "--nice",       "10",            \
-  "--port",       "3632",          \
-  "--stats",                       \
-  "--stats-port", "3633",          \
-  "--enable-tcp-insecure"
-]
-
+VOLUME ["/etc/ccache.conf.d"]
 VOLUME ["/var/cache/ccache"]
 
 EXPOSE 3632/tcp \
