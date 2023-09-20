@@ -26,4 +26,5 @@ services:
 
 volumes:
   dcc-ubuntu:
+    external: true
 
