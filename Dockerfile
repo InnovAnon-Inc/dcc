@@ -2,13 +2,13 @@ FROM kalilinux/kali-rolling as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+    #ccache                         \
 RUN apt update                     \
 &&  apt full-upgrade -y            \
     --no-install-recommends        \
 &&  apt install      -y            \
     --no-install-recommends        \
     afl++                          \
-    ccache                         \
     clang                          \
     clang-13                       \
     clang-14                       \
