@@ -4,9 +4,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN echo repository=https://repo-fastly.voidlinux.org/current/musl/nonfree > /etc/xbps.d/10-repository-nonfree.conf
 RUN xbps-install -Sy                 \
-    xbps                             \
-&&  xbps-install -Syu                \
-&&  xbps-install -Sy                 \
+    xbps
+RUN xbps-install -Syu
+RUN xbps-install -Sy                 \
     ccache                           \
     clang                            \
     distcc                           \
