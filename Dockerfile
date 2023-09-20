@@ -1,4 +1,4 @@
-FROM ubuntu as build
+FROM ubuntu:latest as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
