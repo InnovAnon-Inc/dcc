@@ -71,7 +71,7 @@ RUN ln -fsv                          \
 
 ENV DISTCC_CMDLIST /etc/distcc/commands.allow
 ENV DISTCC_CMDLIST_NUMWORDS=1
-#ENV PATH          "/usr/lib/ccache:$PATH"
+ENV PATH          "/usr/lib/ccache:$PATH"
 
 COPY ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
