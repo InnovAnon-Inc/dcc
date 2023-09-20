@@ -20,10 +20,9 @@ services:
       retries:       10
     depends_on:
       redis:
-         condition: service_started
+        condition:   service_started
       syslog:
-         condition: service_started
-      #  condition:   service_healthy
+        condition:   service_started
 
 volumes:
   dcc-ubuntu:
