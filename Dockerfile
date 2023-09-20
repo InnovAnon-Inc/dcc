@@ -59,19 +59,23 @@ do  ln -sv                           \
 |   tee -a /etc/distcc/commands.allow \
 |   xargs ls -l
 
-ENV CCACHE_CONFIGPATH /etc/ccache.conf.d/ccache.conf
-ENV CCACHE_DIR /var/cache/ccache
+ENV CCACHE_CONFIGPATH       /etc/ccache.conf.d/ccache.conf
+VOLUME                    ["/etc/ccache.conf.d"]
+ENV CCACHE_DIR              /var/cache/ccache
+VOLUME                    ["/var/cache/ccache"]
+ENV CCACHE_PREFIX           distcc
 #RUN ln -fsv                          \
 #    /etc/ccache.conf.d/ccache.conf   \
 #    /etc/ccache.conf
 
 #RUN adduser --system distcc-user
 
-ENV DISTCC_CMDLIST /etc/distcc/commands.allow
+ENV DISTCC_CMDLIST          /etc/distcc/commands.allow
 ENV DISTCC_CMDLIST_NUMWORDS=1
-ENV PATH          "/usr/lib/ccache:$PATH"
+ENV PATH                   "/usr/lib/ccache:$PATH"
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY        ./entrypoint.sh \
+             /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 #ENTRYPOINT [                       \
 #  "/usr/bin/distccd",              \
@@ -90,9 +94,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 #  "--stats",                       \
 #  "--stats-port", "3633"           \
 #]
-
-VOLUME ["/etc/ccache.conf.d"]
-VOLUME ["/var/cache/ccache"]
 
 EXPOSE 3632/tcp \
        3633/tcp
