@@ -67,7 +67,7 @@ RUN ln -fsv                          \
     /etc/ccache.conf.d/ccache.conf   \
     /etc/ccache.conf
 
-RUN adduser --system distcc-user
+#RUN adduser --system distcc-user
 
 ENV DISTCC_CMDLIST=/etc/distcc/commands.allow
 ENV DISTCC_CMDLIST_NUMWORDS=1
@@ -78,7 +78,7 @@ ENTRYPOINT [                       \
   "--daemon",                      \
   "--log-stderr",                  \
   "--no-detach",                   \
-  "--user",       "distcc-user"    \
+  "--user",       "distccd"        \
 ]
 
 CMD [                              \
