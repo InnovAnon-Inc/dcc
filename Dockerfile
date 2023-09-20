@@ -1,4 +1,4 @@
-FROM voidlinux/voidlinux-musl as build
+FROM voidlinux/voidlinux-musl:latest as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
