@@ -1,4 +1,4 @@
-FROM kalilinux/kali-rolling as build
+FROM kalilinux/kali-rolling:latest as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
