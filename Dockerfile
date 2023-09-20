@@ -84,7 +84,7 @@ ENTRYPOINT [                       \
 CMD [                              \
   "--allow",      "0.0.0.0/0",     \
   "--listen",     "0.0.0.0",       \
-  "--log-level=info",              \
+  "--log-level=debug",             \
   "--nice",       "10",            \
   "--port",       "3632",          \
   "--stats",                       \
