@@ -2,12 +2,12 @@ FROM ubuntu as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+    #afl++                          \
 RUN apt update                     \
 &&  apt full-upgrade -y            \
     --no-install-recommends        \
 &&  apt install      -y            \
     --no-install-recommends        \
-    afl++                          \
     ccache                         \
     distcc-pump                    \
     clang                          \
@@ -35,25 +35,25 @@ RUN apt update                     \
 &&  apt clean        -y            \
 &&  rm -rf /var/lib/apt/lists/*
 
-RUN for k in                         \
-    afl-c++                          \
-    afl-cc                           \
-    afl-clang                        \
-    afl-clang++                      \
-    afl-clang-fast                   \
-    afl-clang-fast++                 \
-    afl-clang-lto                    \
-    afl-clang-lto++                  \
-    afl-g++                          \
-    afl-gcc                          \
-    afl-gcc-fast                     \
-    afl-g++-fast                   ; \
-do  ln -sv                           \
-        ../../bin/ccache             \
-         /usr/lib/ccache/$k          \
-||  exit 2                         ; \
-    done                             \
-&&  find /usr/lib/ccache             \
+#RUN for k in                         \
+#    afl-c++                          \
+#    afl-cc                           \
+#    afl-clang                        \
+#    afl-clang++                      \
+#    afl-clang-fast                   \
+#    afl-clang-fast++                 \
+#    afl-clang-lto                    \
+#    afl-clang-lto++                  \
+#    afl-g++                          \
+#    afl-gcc                          \
+#    afl-gcc-fast                     \
+#    afl-g++-fast                   ; \
+#do  ln -sv                           \
+#        ../../bin/ccache             \
+#         /usr/lib/ccache/$k          \
+#||  exit 2                         ; \
+#    done                             \
+RUN find /usr/lib/ccache             \
     -mindepth 1                      \
  \! -type d                          \
 |   tee -a /etc/distcc/commands.allow \
