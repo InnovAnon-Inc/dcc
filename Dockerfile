@@ -4,6 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update                     \
 &&  apt full-upgrade -y            \
+    --no-install-recommends        \
 &&  apt install      -y            \
     --no-install-recommends        \
     afl++                          \
@@ -68,23 +69,25 @@ ENV DISTCC_CMDLIST /etc/distcc/commands.allow
 ENV DISTCC_CMDLIST_NUMWORDS=1
 ENV PATH          "/usr/lib/ccache:$PATH"
 
-ENTRYPOINT [                       \
-  "/usr/bin/distccd",              \
-  "--daemon",                      \
-  "--log-stderr",                  \
-  "--no-detach",                   \
-  "--user",       "distccd"        \
-]
-
-CMD [                              \
-  "--allow",      "0.0.0.0/0",     \
-  "--listen",     "0.0.0.0",       \
-  "--log-level=info",              \
-  "--nice",       "10",            \
-  "--port",       "3632",          \
-  "--stats",                       \
-  "--stats-port", "3633"           \
-]
+COPY ./entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+#ENTRYPOINT [                       \
+#  "/usr/bin/distccd",              \
+#  "--daemon",                      \
+#  "--log-stderr",                  \
+#  "--no-detach",                   \
+#  "--user",       "distccd"        \
+#]
+#
+#CMD [                              \
+#  "--allow",      "0.0.0.0/0",     \
+#  "--listen",     "0.0.0.0",       \
+#  "--log-level=info",              \
+#  "--nice",       "10",            \
+#  "--port",       "3632",          \
+#  "--stats",                       \
+#  "--stats-port", "3633"           \
+#]
 
 VOLUME ["/etc/ccache.conf.d"]
 VOLUME ["/var/cache/ccache"]
