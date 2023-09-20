@@ -26,4 +26,5 @@ services:
 
 volumes:
   dcc-voidlinux:
+    external: true
 
