@@ -88,7 +88,8 @@ CMD [                              \
   "--nice",       "10",            \
   "--port",       "3632",          \
   "--stats",                       \
-  "--stats-port", "3633"           \
+  "--stats-port", "3633",          \
+  "--enable-tcp-insecure"
 ]
 
 VOLUME ["/var/cache/ccache"]
