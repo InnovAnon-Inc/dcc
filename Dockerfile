@@ -59,9 +59,11 @@ do  ln -sv                           \
 |   tee -a /etc/distcc/commands.allow \
 |   xargs ls -l
 
-RUN ln -fsv                          \
-    /etc/ccache.conf.d/ccache.conf   \
-    /etc/ccache.conf
+ENV CCACHE_CONFIGPATH /etc/ccache.conf.d/ccache.conf
+ENV CCACHE_DIR /var/cache/ccache
+#RUN ln -fsv                          \
+#    /etc/ccache.conf.d/ccache.conf   \
+#    /etc/ccache.conf
 
 #RUN adduser --system distcc-user
 
