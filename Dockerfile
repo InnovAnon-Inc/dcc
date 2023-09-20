@@ -12,9 +12,9 @@ RUN xbps-install -Sy                 \
     distcc                           \
     distcc-pump                      \
     gcc                              \
-    isl-devel                        \
-&&  update-ccache-symlinks           \
-&&  update-distcc-symlinks
+    isl-devel
+#&&  update-ccache-symlinks           \
+#&&  update-distcc-symlinks
 
 RUN find /usr/lib/ccache             \
     -mindepth 1                      \
