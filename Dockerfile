@@ -77,9 +77,9 @@ ENTRYPOINT [                       \
   "/usr/bin/distccd",              \
   "--daemon",                      \
   "--log-stderr",                  \
-  "--no-detach",                   \
-  "--user",       "distccd"        \
+  "--no-detach"                    \
 ]
+  #"--user",       "distccd"        \
 
 CMD [                              \
   "--allow",      "0.0.0.0/0",     \
