@@ -8,7 +8,7 @@ git commit -m "$*" || :
 #git pull      origin
 git branch    "$*"
 git checkout  "$*"
-git checkout  HEAD:ubuntu
+git checkout  ubuntu
 git merge     "$*"
 git push origin HEAD:ubuntu
 
