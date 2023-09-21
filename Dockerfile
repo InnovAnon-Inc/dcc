@@ -1,12 +1,13 @@
-FROM ubuntu as build
+FROM ubuntu:latest as build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+    #afl++                          \
 RUN apt update                     \
 &&  apt full-upgrade -y            \
+    --no-install-recommends        \
 &&  apt install      -y            \
     --no-install-recommends        \
-    afl++                          \
     ccache                         \
     distcc-pump                    \
     clang                          \
@@ -34,60 +35,65 @@ RUN apt update                     \
 &&  apt clean        -y            \
 &&  rm -rf /var/lib/apt/lists/*
 
-RUN for k in                         \
-    afl-c++                          \
-    afl-cc                           \
-    afl-clang                        \
-    afl-clang++                      \
-    afl-clang-fast                   \
-    afl-clang-fast++                 \
-    afl-clang-lto                    \
-    afl-clang-lto++                  \
-    afl-g++                          \
-    afl-gcc                          \
-    afl-gcc-fast                     \
-    afl-g++-fast                   ; \
-do  ln -sv                           \
-        ../../bin/ccache             \
-         /usr/lib/ccache/$k          \
-||  exit 2                         ; \
-    done                             \
-&&  find /usr/lib/ccache             \
+#RUN for k in                         \
+#    afl-c++                          \
+#    afl-cc                           \
+#    afl-clang                        \
+#    afl-clang++                      \
+#    afl-clang-fast                   \
+#    afl-clang-fast++                 \
+#    afl-clang-lto                    \
+#    afl-clang-lto++                  \
+#    afl-g++                          \
+#    afl-gcc                          \
+#    afl-gcc-fast                     \
+#    afl-g++-fast                   ; \
+#do  ln -sv                           \
+#        ../../bin/ccache             \
+#         /usr/lib/ccache/$k          \
+#||  exit 2                         ; \
+#    done                             \
+RUN find /usr/lib/ccache             \
     -mindepth 1                      \
  \! -type d                          \
 |   tee -a /etc/distcc/commands.allow \
 |   xargs ls -l
 
-RUN ln -fsv                          \
-    /etc/ccache.conf.d/ccache.conf   \
-    /etc/ccache.conf
+ENV CCACHE_CONFIGPATH       /etc/ccache.conf.d/ccache.conf
+VOLUME                    ["/etc/ccache.conf.d"]
+ENV CCACHE_DIR              /var/cache/ccache
+VOLUME                    ["/var/cache/ccache"]
+#ENV CCACHE_PREFIX           distcc
+#RUN ln -fsv                          \
+#    /etc/ccache.conf.d/ccache.conf   \
+#    /etc/ccache.conf
 
-RUN adduser --system distcc-user
+#RUN adduser --system distcc-user
 
-ENV DISTCC_CMDLIST /etc/distcc/commands.allow
+ENV DISTCC_CMDLIST          /etc/distcc/commands.allow
 ENV DISTCC_CMDLIST_NUMWORDS=1
-ENV PATH          "/usr/lib/ccache:$PATH"
+ENV PATH                   "/usr/lib/ccache:$PATH"
 
-ENTRYPOINT [                       \
-  "/usr/bin/distccd",              \
-  "--daemon",                      \
-  "--log-stderr",                  \
-  "--no-detach",                   \
-  "--user",       "distcc-user"    \
-]
-
-CMD [                              \
-  "--allow",      "0.0.0.0/0",     \
-  "--listen",     "0.0.0.0",       \
-  "--log-level=info",              \
-  "--nice",       "10",            \
-  "--port",       "3632",          \
-  "--stats",                       \
-  "--stats-port", "3633"           \
-]
-
-VOLUME ["/etc/ccache.conf.d"]
-VOLUME ["/var/cache/ccache"]
+COPY        ./entrypoint.sh \
+             /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+#ENTRYPOINT [                       \
+#  "/usr/bin/distccd",              \
+#  "--daemon",                      \
+#  "--log-stderr",                  \
+#  "--no-detach",                   \
+#  "--user",       "distccd"        \
+#]
+#
+#CMD [                              \
+#  "--allow",      "0.0.0.0/0",     \
+#  "--listen",     "0.0.0.0",       \
+#  "--log-level=info",              \
+#  "--nice",       "10",            \
+#  "--port",       "3632",          \
+#  "--stats",                       \
+#  "--stats-port", "3633"           \
+#]
 
 EXPOSE 3632/tcp \
        3633/tcp

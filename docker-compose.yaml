@@ -15,16 +15,16 @@ services:
     healthcheck:
     #  test: ["CMD-SHELL", "exec 3<> /dev/tcp/0.0.0.0/3633 ; cat <&3 ; exec 3<&-"]
       test: ["CMD-SHELL", "distcc --show-hosts && ccache -s"]
-      interval:      1m
+      interval:     10s
       timeout:       3s
       retries:       10
     depends_on:
       redis:
-         condition: service_started
+        condition:   service_started
       syslog:
-         condition: service_started
-      #  condition:   service_healthy
+        condition:   service_started
 
 volumes:
   dcc-ubuntu:
+    external: true
 
