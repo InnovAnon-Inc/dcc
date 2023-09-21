@@ -67,7 +67,7 @@ ENV CCACHE_CONFIGPATH       /etc/ccache.conf.d/ccache.conf
 VOLUME                    ["/etc/ccache.conf.d"]
 ENV CCACHE_DIR              /var/cache/ccache
 VOLUME                    ["/var/cache/ccache"]
-ENV CCACHE_PREFIX           distcc
+#ENV CCACHE_PREFIX           distcc
 
 #RUN ln -fsv                          \
 #    /etc/ccache.conf.d/ccache.conf   \
