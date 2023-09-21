@@ -1,2 +1,0 @@
-# pgrsyslog
-Postgre-backed RSysLog
