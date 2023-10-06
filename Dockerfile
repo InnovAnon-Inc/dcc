@@ -1,7 +1,5 @@
 FROM voidlinux/voidlinux-musl:latest as build
 
-ARG DEBIAN_FRONTEND=noninteractive
-
 RUN echo repository=https://repo-fastly.voidlinux.org/current/musl/nonfree > /etc/xbps.d/10-repository-nonfree.conf
 RUN xbps-install -Sy                 \
     xbps
