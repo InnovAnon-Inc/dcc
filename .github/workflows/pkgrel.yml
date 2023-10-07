@@ -63,6 +63,7 @@ jobs:
         GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
     - name: Sign Installation Package
+      working-directory: "repo"
       run: |
         gpg --yes --detach-sig Dockerfile
         gpg --yes --detach-sig docker-compose.yaml
@@ -74,5 +75,5 @@ jobs:
         fail_on_unmatched_files: true
         generate_release_notes: true
         files: |
-          *
+          repo/*
 
