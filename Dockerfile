@@ -38,7 +38,9 @@ RUN apt update                        \
     -mindepth 1                       \
  \! -type d                           \
 |   tee -a /etc/distcc/commands.allow \
-|   xargs ls -l
+|   xargs ls -l                       \
+&&  command -v ccache                 \
+&&  command -v distcc
 
 #RUN for k in                         \
 #    afl-c++                          \
