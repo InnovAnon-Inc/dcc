@@ -1,24 +1,27 @@
 FROM voidlinux/voidlinux-musl:latest as build
 
-RUN echo repository=https://repo-fastly.voidlinux.org/current/musl/nonfree > /etc/xbps.d/10-repository-nonfree.conf
-RUN xbps-install -Sy                 \
-    xbps
-RUN xbps-install -Syu
-RUN xbps-install -Sy                 \
-    ccache                           \
-    clang                            \
-    distcc                           \
-    distcc-pump                      \
-    gcc                              \
-    isl-devel
 #&&  update-ccache-symlinks           \
 #&&  update-distcc-symlinks
-
-RUN find /usr/lib/ccache             \
-    -mindepth 1                      \
- \! -type d                          \
-|   tee -a /etc/distcc/commands.allow \
-|   xargs ls -l
+RUN echo repository=https://repo-fastly.voidlinux.org/current/musl/nonfree \
+>   /etc/xbps.d/10-repository-nonfree.conf \
+RUN xbps-install -Sy                       \
+    xbps                                   \
+&&  xbps-install -Syu                      \
+&&  xbps-install -Sy                       \
+    ccache                                 \
+    clang                                  \
+    distcc                                 \
+    distcc-pump                            \
+    gcc                                    \
+    isl-devel                              \
+&&  find /usr/lib/ccache                   \
+    -mindepth 1                            \
+ \! -type d                                \
+|   tee -a /etc/distcc/commands.allow      \
+|   xargs ls -l                            \
+&&  useradd --system        distccd        \
+&&  command -v ccache                      \
+&&  command -v distcc
 
 ENV CCACHE_CONFIGPATH       /etc/ccache.conf.d/ccache.conf
 VOLUME                    ["/etc/ccache.conf.d"]
@@ -28,8 +31,6 @@ VOLUME                    ["/var/cache/ccache"]
 #RUN ln -fsv                          \
 #    /etc/ccache.conf.d/ccache.conf   \
 #    /etc/ccache.conf
-
-RUN useradd --system        distccd
 
 ENV DISTCC_CMDLIST          /etc/distcc/commands.allow
 #ENV DISTCC_CMDLIST_NUMWORDS=2
