@@ -3,37 +3,42 @@ FROM ubuntu:latest as build
 ARG DEBIAN_FRONTEND=noninteractive
 
     #afl++                          \
-RUN apt update                     \
-&&  apt full-upgrade -y            \
-    --no-install-recommends        \
-&&  apt install      -y            \
-    --no-install-recommends        \
-    ccache                         \
-    distcc-pump                    \
-    clang                          \
-    clang-13                       \
-    clang-14                       \
-    clang-15                       \
-    gcc                            \
-    gcc-11                         \
-    gcc-12                         \
-    gcc-multilib                   \
-    gcc-11-multilib                \
-    gcc-12-multilib                \
-    g++                            \
-    g++-11                         \
-    g++-12                         \
-    libc-dev                       \
-    libisl-dev                     \
-    llvm-13                        \
-    llvm-14                        \
-    llvm-15                        \
-&&  update-ccache-symlinks         \
-&&  update-distcc-symlinks         \
-&&  apt autoremove   -y            \
-    --purge                        \
-&&  apt clean        -y            \
-&&  rm -rf /var/lib/apt/lists/*
+RUN apt update                        \
+&&  apt full-upgrade -y               \
+    --no-install-recommends           \
+&&  apt install      -y               \
+    --no-install-recommends           \
+    ccache                            \
+    distcc-pump                       \
+    clang                             \
+    clang-13                          \
+    clang-14                          \
+    clang-15                          \
+    gcc                               \
+    gcc-11                            \
+    gcc-12                            \
+    gcc-multilib                      \
+    gcc-11-multilib                   \
+    gcc-12-multilib                   \
+    g++                               \
+    g++-11                            \
+    g++-12                            \
+    libc-dev                          \
+    libisl-dev                        \
+    llvm-13                           \
+    llvm-14                           \
+    llvm-15                           \
+&&  update-ccache-symlinks            \
+&&  update-distcc-symlinks            \
+&&  apt autoremove   -y               \
+    --purge                           \
+&&  apt clean        -y               \
+&&  rm -rf /var/lib/apt/lists/*       \
+&&  find /usr/lib/ccache              \
+    -mindepth 1                       \
+ \! -type d                           \
+|   tee -a /etc/distcc/commands.allow \
+|   xargs ls -l
 
 #RUN for k in                         \
 #    afl-c++                          \
@@ -53,11 +58,6 @@ RUN apt update                     \
 #         /usr/lib/ccache/$k          \
 #||  exit 2                         ; \
 #    done                             \
-RUN find /usr/lib/ccache             \
-    -mindepth 1                      \
- \! -type d                          \
-|   tee -a /etc/distcc/commands.allow \
-|   xargs ls -l
 
 ENV CCACHE_CONFIGPATH       /etc/ccache.conf.d/ccache.conf
 VOLUME                    ["/etc/ccache.conf.d"]
