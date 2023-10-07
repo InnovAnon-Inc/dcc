@@ -1,5 +1,5 @@
-# dcc-ubuntu [![ubuntu](https://github.com/InnovAnon-Inc/dcc/actions/workflows/pkgrel.yml/badge.svg?branch=ubuntu)](https://github.com/InnovAnon-Inc/dcc/actions/workflows/pkgrel.yml?branch=ubuntu)
-Dockerized DistCC with Server-Side CCache (Ubuntu)
+# dcc [![main](https://github.com/InnovAnon-Inc/dcc/actions/workflows/pkgrel.yml/badge.svg?branch=main)](https://github.com/InnovAnon-Inc/dcc/actions/workflows/pkgrel.yml?branch=main)
+Dockerized DistCC with Server-Side CCache
 ==========
 [![License Summary](https://img.shields.io/github/license/InnovAnon-Inc/dcc?color=%23FF1100&label=Free%20Code%20for%20a%20Free%20World%21&logo=InnovAnon%2C%20Inc.&logoColor=%23FF1133&style=plastic)](https://tldrlegal.com/license/unlicense#summary)
 [![Latest Release](https://img.shields.io/github/commits-since/InnovAnon-Inc/dcc/latest?color=%23FF1100&include_prereleases&logo=InnovAnon%2C%20Inc.&logoColor=%23FF1133&style=plastic)](https://github.com/InnovAnon-Inc/dcc/releases/latest)
